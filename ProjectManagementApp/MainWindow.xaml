@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="ProjectManagementApp.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,9 +6,100 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="ProjectManagementApp">
+    Title="UMGPlan">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
+        <NavigationView 
+            Grid.Column="0" 
+            PaneDisplayMode="Left"
+            IsSettingsVisible="False"
+            IsPaneOpen="True"
+            IsPaneToggleButtonVisible="False"
+            OpenPaneLength="240"
+            Header="">
+            <NavigationView.PaneHeader>
+                <StackPanel Margin="12,10,2,10" Spacing="8">
+                    <Grid HorizontalAlignment="Left">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <PersonPicture 
+                            Grid.Row="0" 
+                            Grid.Column="0" 
+                            Grid.RowSpan="2"
+                            Width="44" 
+                            Height="44"
+                            Margin="0,0,10,0"
+                        />
+
+                        <TextBlock 
+                            Grid.Row="0" 
+                            Grid.Column="1" 
+                            Text="Michael" 
+                            FontWeight="SemiBold"
+                        />
+                        <TextBlock 
+                            Grid.Row="1" 
+                            Grid.Column="1" 
+                            Text="Cuenta Local" 
+                            Opacity="0.7" 
+                            FontSize="12"
+                         />
+                    </Grid>
+
+                    <AutoSuggestBox 
+                        PlaceholderText="Buscar" 
+                        QueryIcon="Find"
+                        Height="32"
+                        Margin="0, 12"
+                    />
+                </StackPanel>
+            </NavigationView.PaneHeader>
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Icon="Home" />
+                <NavigationViewItem Content="Actividades" Icon="AllApps" />
+                <NavigationViewItem Content="Miembros" Icon="People" />
+
+                <NavigationViewItem x:Name="ProjectsNavItem" Content="Proyectos">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8F1;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <NavigationView.PaneFooter>
+                <Button 
+                    Style="{StaticResource AccentButtonStyle}"
+                    Content="Agregar un Proyecto" 
+                    Margin="12,12,12,12" 
+                    HorizontalAlignment="Stretch">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE710;" Margin="0,0,8,0"/>
+                                <TextBlock Text="Agregar un Proyecto"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+            </NavigationView.PaneFooter>
+
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+
+        <Grid Grid.Column="1">
+            <!-- Contenido pagina -->
+        </Grid>
     </Grid>
 </Window>

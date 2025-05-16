@@ -394,3 +394,6 @@ cppwinrt_*.rsp
 *vcxproj.cppwinrt_*.cache
 *.vcxproj.MdMergeInputs.cache
 *.vcxproj.mdmerge.rsp
+
+# Temp folders
+**/enc_temp_folder/
