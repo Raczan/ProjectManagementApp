@@ -1,0 +1,8 @@
+namespace ProjectManagementApp
+{
+    [default_interface]
+    runtimeclass MiembrosPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        MiembrosPage();
+    }
+}

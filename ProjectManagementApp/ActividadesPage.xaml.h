@@ -1,12 +1,12 @@
 #pragma once
 
-#include "MainWindow.g.h"
+#include "ActividadesPage.g.h"
 
 namespace winrt::ProjectManagementApp::implementation
 {
-    struct MainWindow : MainWindowT<MainWindow>
+    struct ActividadesPage : ActividadesPageT<ActividadesPage>
     {
-        MainWindow()
+        ActividadesPage()
         {
             // Xaml objects should not call InitializeComponent during construction.
             // See https://github.com/microsoft/cppwinrt/tree/master/nuget#initializecomponent
@@ -16,7 +16,7 @@ namespace winrt::ProjectManagementApp::implementation
 
 namespace winrt::ProjectManagementApp::factory_implementation
 {
-    struct MainWindow : MainWindowT<MainWindow, implementation::MainWindow>
+    struct ActividadesPage : ActividadesPageT<ActividadesPage, implementation::ActividadesPage>
     {
     };
 }

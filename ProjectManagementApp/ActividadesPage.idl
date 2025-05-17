@@ -1,0 +1,8 @@
+namespace ProjectManagementApp
+{
+    [default_interface]
+    runtimeclass ActividadesPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        ActividadesPage();
+    }
+}
