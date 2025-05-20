@@ -252,6 +252,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <CopyFileToFolders Include="Resources\projectmanagement.sql">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">True</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">True</DeploymentContent>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ProjectManagementApp.rc" />

@@ -71,4 +71,7 @@
   <ItemGroup>
     <ResourceCompile Include="ProjectManagementApp.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Resources\projectmanagement.sql" />
+  </ItemGroup>
 </Project>

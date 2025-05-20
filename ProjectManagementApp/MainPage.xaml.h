@@ -15,6 +15,8 @@ namespace winrt::ProjectManagementApp::implementation
 		sqlite3* db;
 		void openDatabase();
         void closeDatabase();
+        int usuario_actual_id = 1;
+        void cargarUsuarioActual();
     public:
         MainPage()
         {

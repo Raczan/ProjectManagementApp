@@ -29,22 +29,25 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <PersonPicture 
-                            Grid.Row="0" 
-                            Grid.Column="0" 
-                            Grid.RowSpan="2"
-                            Width="44" 
-                            Height="44"
-                            Margin="0,0,10,0"
-                        />
+                    <PersonPicture
+                        x:Name="UserPicture"
+                        Grid.Row="0" 
+                        Grid.Column="0" 
+                        Grid.RowSpan="2"
+                        Width="44" 
+                        Height="44"
+                        Margin="0,0,10,0"
+                    />
 
                     <TextBlock 
+                            x:Name="UserNameText"
                             Grid.Row="0" 
                             Grid.Column="1" 
                             Text="Michael" 
                             FontWeight="SemiBold"
                         />
                     <TextBlock 
+                            x:Name="UserRoleText"
                             Grid.Row="1" 
                             Grid.Column="1" 
                             Text="Cuenta Local" 
