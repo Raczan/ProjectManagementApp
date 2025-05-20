@@ -4,8 +4,9 @@
 #include "MainPage.g.cpp"
 #endif
 #include "winrt/Windows.UI.Xaml.Interop.h"
-using namespace winrt::Microsoft::UI::Xaml::Controls;
+#include <winrt/Windows.Storage.h>
 
+using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
 
@@ -17,6 +18,7 @@ namespace winrt::ProjectManagementApp::implementation
     void MainPage::Page_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
         LoadProjects();
+		openDatabase();
     }
 
     void MainPage::LoadProjects()
@@ -48,6 +50,11 @@ namespace winrt::ProjectManagementApp::implementation
         catch (...) {
             OutputDebugString(L"Error desconocido en LoadProjects\n");
         }
+    }
+
+    void MainPage::Page_Unloaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    {
+        closeDatabase();
     }
 
     void MainPage::NavigationView_ItemInvoked(winrt::Microsoft::UI::Xaml::Controls::NavigationView const& sender, winrt::Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs const& args)
@@ -103,4 +110,28 @@ namespace winrt::ProjectManagementApp::implementation
         mainFrame().Navigate(xaml_typename<ProyectosPage>());
     }
 
+    void MainPage::openDatabase()
+    {
+        auto localFolder = Windows::Storage::ApplicationData::Current().LocalFolder();
+        std::wstring fullPath = std::wstring(localFolder.Path()) + L"\\database.db";
+        std::string path = winrt::to_string(fullPath);
+        const char* dbFilename = path.c_str();
+
+        std::wstring debugMsg = L"Ubicación de la BD: " + fullPath + L"\n";
+        OutputDebugString(debugMsg.c_str());
+
+        int result = sqlite3_open(dbFilename, &db);
+
+        if (result != SQLITE_OK) {
+            OutputDebugString(L"Error al abrir la base de datos\n");
+        }
+        else {
+            OutputDebugString(L"Base de datos abierta correctamente\n");
+        }
+    }
+    
+    void MainPage::closeDatabase()
+    {
+		sqlite3_close(db);
+    }
 }

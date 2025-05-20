@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MainPage.g.h"
+#include "db/sqlite3.h"
 
 namespace winrt::ProjectManagementApp::implementation
 {
@@ -11,6 +12,9 @@ namespace winrt::ProjectManagementApp::implementation
         void openActividadesPage();
         void openMiembrosPage();
 		void openProyectosPage();
+		sqlite3* db;
+		void openDatabase();
+        void closeDatabase();
     public:
         MainPage()
         {
@@ -18,6 +22,7 @@ namespace winrt::ProjectManagementApp::implementation
             // See https://github.com/microsoft/cppwinrt/tree/master/nuget#initializecomponent
         }
         void Page_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void Page_Unloaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void NavigationView_ItemInvoked(winrt::Microsoft::UI::Xaml::Controls::NavigationView const& sender, winrt::Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs const& args);
         void mainFrame_Navigated(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs const& e);
         void nav_BackRequested(winrt::Microsoft::UI::Xaml::Controls::NavigationView const& sender, winrt::Microsoft::UI::Xaml::Controls::NavigationViewBackRequestedEventArgs const& args);
