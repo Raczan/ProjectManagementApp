@@ -6,12 +6,203 @@
     xmlns:local="using:ProjectManagementApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
-    <Grid>
+    <Grid Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Título -->
         <TextBlock 
+            Grid.Row="0"
             Text="Mis Actividades"   
-            Margin="16" 
-            Style="{StaticResource TitleTextBlockStyle}"/>
+            Style="{StaticResource TitleTextBlockStyle}"
+            FontSize="28"
+            Margin="0,0,0,8"/>
+
+        <!-- Descripción -->
+        <TextBlock 
+            Grid.Row="1"
+            Text="Administra y realiza seguimiento de tus actividades asignadas"
+            Style="{StaticResource BodyTextBlockStyle}"
+            Opacity="0.8"
+            Margin="0,0,0,24"/>
+
+        <!-- Tabla de actividades -->
+        <Border Grid.Row="2" 
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Encabezados de la tabla -->
+                <Border Grid.Row="0" 
+                        Background="{ThemeResource ControlFillColorDefaultBrush}"
+                        CornerRadius="8,8,0,0"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="0,0,0,1">
+                    <Grid Padding="16,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Grid.Column="0" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="Nombre de Actividad" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Text="Proyecto" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Text="Asignado a" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="Fecha Límite" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="5" Text="Estado" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}" 
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Lista de actividades -->
+                <ListView x:Name="ActivitiesListView" 
+                          Grid.Row="1"
+                          SelectionMode="Multiple"
+                          IsItemClickEnabled="False"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.HorizontalScrollMode="Disabled">
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="16,12" MinHeight="60">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Checkbox -->
+                                <CheckBox Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                <!-- Nombre de actividad -->
+                                <TextBlock Grid.Column="1" 
+                                           Text="{Binding ActivityName}" 
+                                           Style="{StaticResource BodyTextBlockStyle}"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"/>
+
+                                <!-- Proyecto con icono -->
+                                <StackPanel Grid.Column="2" 
+                                            Orientation="Horizontal" 
+                                            VerticalAlignment="Center" 
+                                            Spacing="8">
+                                    <Border Width="24" Height="24" 
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                            CornerRadius="4">
+                                        <FontIcon Glyph="&#xE8F1;" 
+                                                  FontSize="12" 
+                                                  Foreground="White"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding ProjectName}" 
+                                               Style="{StaticResource BodyTextBlockStyle}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <!-- Asignados (avatares) -->
+                                <StackPanel Grid.Column="3" 
+                                            Orientation="Horizontal" 
+                                            VerticalAlignment="Center"
+                                            Spacing="-8">
+                                    <PersonPicture Width="32" Height="32" 
+                                                   ProfilePicture="{Binding AssigneeImageUrl}"/>
+                                    <!-- Puedes agregar más PersonPicture aquí para múltiples asignados -->
+                                    <Border Width="32" Height="32" 
+                                            Background="{ThemeResource SystemFillColorSolidNeutralBrush}"
+                                            CornerRadius="16"
+                                            Visibility="{Binding HasMultipleAssignees}">
+                                        <TextBlock Text="{Binding AdditionalAssigneesCount}" 
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Fecha límite -->
+                                <TextBlock Grid.Column="4" 
+                                           Text="{Binding DueDate}" 
+                                           Style="{StaticResource BodyTextBlockStyle}"
+                                           VerticalAlignment="Center"/>
+
+                                <!-- Estado -->
+                                <Border Grid.Column="5" 
+                                        Background="{Binding StatusBackgroundColor}"
+                                        CornerRadius="12"
+                                        Padding="12,4"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Ellipse Width="8" Height="8" 
+                                                 Fill="{Binding StatusColor}"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Status}" 
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{Binding StatusTextColor}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <!-- Mensaje cuando no hay actividades -->
+                <StackPanel x:Name="EmptyStatePanel"
+                            Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="16"
+                            Visibility="Collapsed">
+                    <FontIcon Glyph="&#xE7C3;" FontSize="48" Opacity="0.5"/>
+                    <TextBlock Text="No tienes actividades asignadas" 
+                               Style="{StaticResource BodyTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               Opacity="0.7"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Page>
