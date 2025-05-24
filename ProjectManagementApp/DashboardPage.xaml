@@ -6,7 +6,8 @@
     xmlns:local="using:ProjectManagementApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <ScrollViewer>
         <Grid Padding="24">
@@ -124,10 +125,10 @@
                     <TextBlock Grid.Row="0" Text="Mis Actividades" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                     <Border Grid.Row="1" 
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8">
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
                         <ListView x:Name="ActivitiesList" SelectionMode="None" IsItemClickEnabled="False" MaxHeight="280">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -144,30 +145,31 @@
                                         </Grid.ColumnDefinitions>
 
                                         <StackPanel Grid.Column="0" Spacing="4">
-                                            <TextBlock Text="Nombre de la Actividad" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
-                                            <TextBlock Text="Proyecto - 15/06/2025" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7"/>
+                                            <TextBlock Text="{Binding [ActivityName]}" 
+                                               Style="{StaticResource BodyTextBlockStyle}" 
+                                               FontWeight="SemiBold"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="{Binding [ProjectName]}" 
+                                                   Style="{StaticResource CaptionTextBlockStyle}" 
+                                                   Opacity="0.7"/>
+                                                <TextBlock Text=" - " 
+                                                   Style="{StaticResource CaptionTextBlockStyle}" 
+                                                   Opacity="0.7"/>
+                                                <TextBlock Text="{Binding [DueDate]}" 
+                                                   Style="{StaticResource CaptionTextBlockStyle}" 
+                                                   Opacity="0.7"/>
+                                            </StackPanel>
                                         </StackPanel>
 
-                                        <!-- Badge fitted -->
-                                        <Border Grid.Column="1" 
-                                                Background="#E6F7FF" 
-                                                CornerRadius="4"
-                                                Padding="8,4"
-                                                VerticalAlignment="Center">
-                                            <TextBlock Text="En Progreso" 
-                                                       Foreground="#0078D4" 
-                                                       FontSize="12" 
-                                                       FontWeight="SemiBold"/>
+                                        <Border Grid.Column="1" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding [StatusBg]}"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding [Status]}" Foreground="{Binding [StatusColor]}" FontSize="12" FontWeight="SemiBold"/>
                                         </Border>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-
-                            <!-- Dummy items -->
-                            <x:String>Item 1</x:String>
-                            <x:String>Item 2</x:String>
-                            <x:String>Item 3</x:String>
-                            <x:String>Item 4</x:String>
                         </ListView>
                     </Border>
                 </Grid>
@@ -202,30 +204,37 @@
                                         </Grid.ColumnDefinitions>
 
                                         <StackPanel Grid.Column="0" Spacing="4">
-                                            <TextBlock Text="Nombre del Proyecto" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
-                                            <TextBlock Text="12 Actividades - 30/07/2025" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7"/>
+                                            <TextBlock Text="{Binding [ProjectName]}" 
+                                                       Style="{StaticResource BodyTextBlockStyle}" 
+                                                       FontWeight="SemiBold"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="{Binding [ActivityCount]}" 
+                                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                                           Opacity="0.7"/>
+                                                <TextBlock Text=" - " 
+                                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                                           Opacity="0.7"/>
+                                                <TextBlock Text="{Binding [DueDate]}" 
+                                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                                           Opacity="0.7"/>
+                                            </StackPanel>
                                         </StackPanel>
 
-                                        <!-- Badge fitted -->
                                         <Border Grid.Column="1" 
-                                                Background="#E8F5E9" 
                                                 CornerRadius="4"
                                                 Padding="8,4"
                                                 VerticalAlignment="Center">
-                                            <TextBlock Text="Activo" 
-                                                       Foreground="#388E3C" 
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding [StatusBg]}"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding [Status]}" 
+                                                       Foreground="{Binding [StatusColor]}"
                                                        FontSize="12" 
                                                        FontWeight="SemiBold"/>
                                         </Border>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-
-                            <!-- Dummy items -->
-                            <x:String>Item 1</x:String>
-                            <x:String>Item 2</x:String>
-                            <x:String>Item 3</x:String>
-                            <x:String>Item 4</x:String>
                         </ListView>
                     </Border>
                 </Grid>
@@ -254,47 +263,43 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Width="170"
-                            Padding="16">
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Width="170"
+                                        Padding="16">
                                     <Grid Width="120">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <PersonPicture Grid.Row="0"
-                                         Width="44"
-                                         Height="44"
-                                         HorizontalAlignment="Center"
-                                         Margin="0,0,0,8"/>
+                                        <PersonPicture 
+                                            Grid.Row="0"
+                                            Width="44"
+                                            Height="44"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,0,0,8"
+                                            ProfilePicture="{Binding [ProfileImageUrl]}"/>
 
                                         <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="2">
-                                            <TextBlock Text="Nombre Apellido" 
-                                           Style="{StaticResource BodyTextBlockStyle}" 
-                                           FontWeight="SemiBold"
-                                           HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Rol" 
-                                           Style="{StaticResource CaptionTextBlockStyle}" 
-                                           Opacity="0.7"
-                                           HorizontalAlignment="Center"/>
+                                            <TextBlock 
+                                                Text="{Binding [MemberName]}" 
+                                                Style="{StaticResource BodyTextBlockStyle}" 
+                                                FontWeight="SemiBold"
+                                                HorizontalAlignment="Center"
+                                                TextAlignment="Center"/>
+                                            <TextBlock 
+                                                Text="{Binding [MemberRole]}" 
+                                                Style="{StaticResource CaptionTextBlockStyle}" 
+                                                Opacity="0.7"
+                                                HorizontalAlignment="Center"
+                                                TextAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
-
-                        <!-- Dummy items -->
-                        <x:String>Member 1</x:String>
-                        <x:String>Member 2</x:String>
-                        <x:String>Member 3</x:String>
-                        <x:String>Member 4</x:String>
-                        <x:String>Member 5</x:String>
-                        <x:String>Member 6</x:String>
-                        <x:String>Member 7</x:String>
-                        <x:String>Member 8</x:String>
                     </ItemsControl>
                 </ScrollViewer>
             </Grid>
