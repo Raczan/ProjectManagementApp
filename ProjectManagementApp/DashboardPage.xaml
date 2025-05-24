@@ -8,10 +8,296 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock 
-            Text="Dashboard"   
-            Margin="16" 
-            Style="{StaticResource TitleTextBlockStyle}"/>
-    </Grid>
+    <ScrollViewer>
+        <Grid Padding="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Título y descripción -->
+            <TextBlock 
+                Grid.Row="0"
+                Text="Dashboard"   
+                Style="{StaticResource TitleTextBlockStyle}"
+                FontSize="28"
+                Margin="0,0,0,8"/>
+
+            <TextBlock 
+                Grid.Row="1"
+                Text="Resumen del estado actual de proyectos y actividades"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Opacity="0.8"
+                Margin="0,0,0,24"/>
+
+            <!-- Tarjetas de resumen -->
+            <Grid Grid.Row="2" Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Proyectos activos -->
+                <Border Grid.Column="0" Margin="0,0,8,0" 
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <Grid Padding="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Proyectos Activos" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.8"/>
+                        <TextBlock x:Name="ActiveProjectsCount" Grid.Row="1" Text="5" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" Margin="0,4,0,0"/>
+                    </Grid>
+                </Border>
+
+                <!-- Actividades totales -->
+                <Border Grid.Column="1" Margin="8,0,8,0"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <Grid Padding="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Actividades Totales" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.8"/>
+                        <TextBlock x:Name="TotalActivitiesCount" Grid.Row="1" Text="25" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" Margin="0,4,0,0"/>
+                    </Grid>
+                </Border>
+
+                <!-- Actividades completadas -->
+                <Border Grid.Column="2" Margin="8,0,8,0"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <Grid Padding="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Actividades Completadas" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.8"/>
+                        <TextBlock x:Name="CompletedActivitiesCount" Grid.Row="1" Text="12" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" Margin="0,4,0,0"/>
+                    </Grid>
+                </Border>
+
+                <!-- Próximos a vencer -->
+                <Border Grid.Column="3" Margin="8,0,0,0"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <Grid Padding="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Próximos a Vencer" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.8"/>
+                        <TextBlock x:Name="UpcomingDueCount" Grid.Row="1" Text="3" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" Margin="0,4,0,0"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Mis Actividades y Mis Proyectos -->
+            <Grid Grid.Row="3" Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Mis Actividades -->
+                <Grid Grid.Column="0" Margin="0,0,12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Mis Actividades" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                    <Border Grid.Row="1" 
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <ListView x:Name="ActivitiesList" SelectionMode="None" IsItemClickEnabled="False" MaxHeight="280">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="16,12"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Spacing="4">
+                                            <TextBlock Text="Nombre de la Actividad" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="Proyecto - 15/06/2025" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7"/>
+                                        </StackPanel>
+
+                                        <!-- Badge fitted -->
+                                        <Border Grid.Column="1" 
+                                                Background="#E6F7FF" 
+                                                CornerRadius="4"
+                                                Padding="8,4"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="En Progreso" 
+                                                       Foreground="#0078D4" 
+                                                       FontSize="12" 
+                                                       FontWeight="SemiBold"/>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                            <!-- Dummy items -->
+                            <x:String>Item 1</x:String>
+                            <x:String>Item 2</x:String>
+                            <x:String>Item 3</x:String>
+                            <x:String>Item 4</x:String>
+                        </ListView>
+                    </Border>
+                </Grid>
+
+                <!-- Mis Proyectos -->
+                <Grid Grid.Column="1" Margin="12,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Mis Proyectos" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                    <Border Grid.Row="1" 
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <ListView x:Name="ProjectsList" SelectionMode="None" IsItemClickEnabled="False" MaxHeight="280">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="16,12"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Spacing="4">
+                                            <TextBlock Text="Nombre del Proyecto" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="12 Actividades - 30/07/2025" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.7"/>
+                                        </StackPanel>
+
+                                        <!-- Badge fitted -->
+                                        <Border Grid.Column="1" 
+                                                Background="#E8F5E9" 
+                                                CornerRadius="4"
+                                                Padding="8,4"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="Activo" 
+                                                       Foreground="#388E3C" 
+                                                       FontSize="12" 
+                                                       FontWeight="SemiBold"/>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                            <!-- Dummy items -->
+                            <x:String>Item 1</x:String>
+                            <x:String>Item 2</x:String>
+                            <x:String>Item 3</x:String>
+                            <x:String>Item 4</x:String>
+                        </ListView>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Miembros -->
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Miembros" Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                <ScrollViewer Grid.Row="1" 
+                  HorizontalScrollMode="Enabled" 
+                  VerticalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl x:Name="MembersList">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="16" Padding="0,12,0,24"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Width="170"
+                            Padding="16">
+                                    <Grid Width="120">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <PersonPicture Grid.Row="0"
+                                         Width="44"
+                                         Height="44"
+                                         HorizontalAlignment="Center"
+                                         Margin="0,0,0,8"/>
+
+                                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" Spacing="2">
+                                            <TextBlock Text="Nombre Apellido" 
+                                           Style="{StaticResource BodyTextBlockStyle}" 
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Rol" 
+                                           Style="{StaticResource CaptionTextBlockStyle}" 
+                                           Opacity="0.7"
+                                           HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                        <!-- Dummy items -->
+                        <x:String>Member 1</x:String>
+                        <x:String>Member 2</x:String>
+                        <x:String>Member 3</x:String>
+                        <x:String>Member 4</x:String>
+                        <x:String>Member 5</x:String>
+                        <x:String>Member 6</x:String>
+                        <x:String>Member 7</x:String>
+                        <x:String>Member 8</x:String>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Page>
