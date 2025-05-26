@@ -111,6 +111,9 @@
       <DependentUpon>ActividadesPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="AddMemberDialog.xaml.h">
+      <DependentUpon>AddMemberDialog.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="DashboardPage.xaml.h">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -142,6 +145,9 @@
     <Page Include="ActividadesPage.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="AddMemberDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DashboardPage.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -160,6 +166,9 @@
     <ClCompile Include="ActividadesPage.xaml.cpp">
       <DependentUpon>ActividadesPage.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </ClCompile>
+    <ClCompile Include="AddMemberDialog.xaml.cpp">
+      <DependentUpon>AddMemberDialog.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="DashboardPage.xaml.cpp">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
@@ -207,6 +216,7 @@
       <DependentUpon>ActividadesPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
+    <Midl Include="AddMemberDialog.idl" />
     <Midl Include="DashboardPage.idl">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
       <SubType>Code</SubType>

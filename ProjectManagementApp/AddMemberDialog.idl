@@ -1,0 +1,16 @@
+namespace ProjectManagementApp
+{
+    [default_interface]
+    runtimeclass AddMemberDialog : Microsoft.UI.Xaml.Controls.ContentDialog
+    {
+        AddMemberDialog();
+        AddMemberDialog(Int32 userId, String firstName, String lastName, String email, String phone, String department);
+        String FirstName{ get; };
+        String LastName{ get; };
+        String Email{ get; };
+        String Phone{ get; };
+        String Department{ get; };
+        Int32 UserId{ get; };
+        Boolean IsEditMode{ get; };
+    }
+}

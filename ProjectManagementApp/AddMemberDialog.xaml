@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="ProjectManagementApp.AddMemberDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProjectManagementApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Agregar Nuevo Miembro"
+    PrimaryButtonText="Agregar"
+    SecondaryButtonText="Cancelar"
+    DefaultButton="Primary">
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Padding="4,8,4,0">
+
+            <!-- Nombre -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Nombre *" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                <TextBox 
+                    x:Name="FirstNameTextBox"
+                    PlaceholderText="Ingrese el nombre"
+                    MaxLength="100"/>
+            </StackPanel>
+
+            <!-- Apellido -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Apellido *" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                <TextBox 
+                    x:Name="LastNameTextBox"
+                    PlaceholderText="Ingrese el apellido"
+                    MaxLength="100"/>
+            </StackPanel>
+
+            <!-- Email -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Correo Electrónico *" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                <TextBox 
+                    x:Name="EmailTextBox"
+                    PlaceholderText="ejemplo@empresa.com"
+                    InputScope="EmailNameOrAddress"
+                    MaxLength="100"/>
+            </StackPanel>
+
+            <!-- Teléfono -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Teléfono" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                <TextBox 
+                    x:Name="PhoneTextBox"
+                    PlaceholderText="555-1234"
+                    InputScope="TelephoneNumber"
+                    MaxLength="20"/>
+            </StackPanel>
+
+            <!-- Departamento -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Departamento *" Style="{StaticResource BodyTextBlockStyle}" FontWeight="SemiBold"/>
+                <ComboBox 
+                    x:Name="DepartmentComboBox"
+                    PlaceholderText="Seleccione un departamento"
+                    HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Desarrollo"/>
+                    <ComboBoxItem Content="Diseño"/>
+                    <ComboBoxItem Content="Marketing"/>
+                    <ComboBoxItem Content="Ventas"/>
+                    <ComboBoxItem Content="Recursos Humanos"/>
+                    <ComboBoxItem Content="Finanzas"/>
+                    <ComboBoxItem Content="Atención al Cliente"/>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Nota sobre campos obligatorios -->
+            <TextBlock 
+                Text="Los campos marcados con * son obligatorios"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Opacity="0.7"
+                Margin="0,8,0,0"/>
+
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>

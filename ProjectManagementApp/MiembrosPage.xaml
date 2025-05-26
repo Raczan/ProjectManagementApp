@@ -6,12 +6,166 @@
     xmlns:local="using:ProjectManagementApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
-    <Grid>
-        <TextBlock 
-            Text="Miembros"   
-            Margin="16" 
-            Style="{StaticResource TitleTextBlockStyle}"/>
-    </Grid>
+    <ScrollViewer>
+        <Grid Padding="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Título -->
+            <TextBlock 
+                Grid.Row="0"
+                Text="Miembros del Equipo"   
+                Style="{StaticResource TitleTextBlockStyle}"
+                FontSize="28"
+                Margin="0,0,0,8"/>
+
+            <!-- Descripción -->
+            <TextBlock 
+                Grid.Row="1"
+                Text="Gestiona los miembros del equipo y sus roles en los proyectos"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Opacity="0.8"
+                Margin="0,0,0,16"/>
+
+            <!-- Barra de herramientas -->
+            <Grid Grid.Row="2" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Botón Agregar Miembro -->
+                <Button 
+                    Grid.Column="1"
+                    x:Name="AddMemberButton"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Click="AddMemberButton_Click"
+                    HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE710;" FontSize="14"/>
+                        <TextBlock Text="Agregar Miembro"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Lista de Miembros -->
+            <Border 
+                Grid.Row="3"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+
+                <ListView 
+                    x:Name="MembersList" 
+                    SelectionMode="Single"
+                    IsItemClickEnabled="True"
+                    ItemClick="MembersList_ItemClick">
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="20,16" Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Foto de perfil -->
+                                <PersonPicture 
+                                    Grid.Column="0"
+                                    Width="40" 
+                                    Height="40"
+                                    Margin="0,0,16,0"
+                                    ProfilePicture="{Binding [ProfileImageUrl]}"/>
+
+                                <!-- Información del miembro -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                                    <TextBlock 
+                                        Text="{Binding [FullName]}" 
+                                        Style="{StaticResource BodyTextBlockStyle}" 
+                                        FontWeight="SemiBold"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock 
+                                            Text="{Binding [Email]}" 
+                                            Style="{StaticResource CaptionTextBlockStyle}" 
+                                            Opacity="0.7"/>
+                                        <TextBlock 
+                                            Text=" • " 
+                                            Style="{StaticResource CaptionTextBlockStyle}" 
+                                            Opacity="0.7"/>
+                                        <TextBlock 
+                                            Text="{Binding [Phone]}" 
+                                            Style="{StaticResource CaptionTextBlockStyle}" 
+                                            Opacity="0.7"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Departamento -->
+                                <Border 
+                                    Grid.Column="2" 
+                                    Background="Transparent"
+                                    BorderBrush="{ThemeResource TextFillColorSecondaryBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4" 
+                                    Padding="8,4" 
+                                    Margin="8,0"
+                                    VerticalAlignment="Center">
+                                    <TextBlock 
+                                        Text="{Binding [Department]}" 
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        FontWeight="SemiBold"/>
+                                </Border>
+
+                                <!-- Fecha de registro -->
+                                <TextBlock 
+                                    Grid.Column="3"
+                                    Text="{Binding [RegistrationDate]}" 
+                                    Style="{StaticResource CaptionTextBlockStyle}" 
+                                    Opacity="0.7"
+                                    VerticalAlignment="Center"
+                                    Margin="16,0"/>
+
+                                <!-- Menú de opciones -->
+                                <Button 
+                                    Grid.Column="4"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    VerticalAlignment="Center">
+                                    <FontIcon Glyph="&#xE712;" FontSize="14"/>
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Editar" Icon="Edit" Click="EditMember_Click" Tag="{Binding}"/>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="Eliminar" Icon="Delete" Click="DeleteMember_Click" Tag="{Binding}"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Page>

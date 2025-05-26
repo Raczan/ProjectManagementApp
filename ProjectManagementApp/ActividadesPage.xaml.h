@@ -19,7 +19,7 @@ namespace winrt::ProjectManagementApp::implementation
 
     private:
         sqlite3* db = nullptr;
-        int currentUserId = 1; // Por ahora hardcodeado, después lo puedes obtener del contexto de usuario
+        int currentUserId = 1;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::Windows::Foundation::IInspectable> activitiesCollection = nullptr;
 
         void openDatabase();

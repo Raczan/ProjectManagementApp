@@ -10,9 +10,11 @@
     <Page Include="MainPage.xaml" />
     <Page Include="MiembrosPage.xaml" />
     <Page Include="ProyectosPage.xaml" />
+    <Page Include="AddMemberDialog.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="MainWindow.idl" />
+    <Midl Include="AddMemberDialog.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
