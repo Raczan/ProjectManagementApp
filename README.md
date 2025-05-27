@@ -2,7 +2,7 @@
 
 ## 📚 Documentación
 - [📋 Documentación del Proyecto](ProjectManagementApp/docs/documentacion.pdf)
-- [🎥 Video Demostración](ProjectManagementApp/docs/video-demo.md)
+- [🎥 Video Demostración](https://drive.google.com/file/d/1iSm9zWFtDL7uKWjPh3QnHCNatH3YCA2c/view?usp=sharing)
 - [🗄️ Script de Base de Datos](ProjectManagementApp/Resources/projectmanagement.sql)
 
 ## Descripción
@@ -13,7 +13,6 @@ Sistema integral de gestión de proyectos desarrollado con WinUI 3 y C++/WinRT p
 - **Gestión completa de miembros** del equipo por departamentos
 - **Administración de actividades** con sistema de prioridades
 - **Seguimiento de proyectos** con métricas de progreso
-- **CRUD completo** para todas las entidades del sistema
 
 ## Tecnologías Utilizadas
 - C++/WinRT
