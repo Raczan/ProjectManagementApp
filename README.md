@@ -1,9 +1,9 @@
 # UMGPlan - Sistema de Gestión de Proyectos
 
 ## 📚 Documentación
-- [📋 Documentación del Proyecto](docs/documentacion.pdf)
-- [🎥 Video Demostración](docs/video-demo.md)
-- [🗄️ Script de Base de Datos](database/projectmanagement.sql)
+- [📋 Documentación del Proyecto](ProjectManagementApp/docs/documentacion.pdf)
+- [🎥 Video Demostración](ProjectManagementApp/docs/video-demo.md)
+- [🗄️ Script de Base de Datos](ProjectManagementApp/Resources/projectmanagement.sql)
 
 ## Descripción
 Sistema integral de gestión de proyectos desarrollado con WinUI 3 y C++/WinRT para facilitar el seguimiento, control y administración de proyectos empresariales.
