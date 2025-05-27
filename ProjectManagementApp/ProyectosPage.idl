@@ -4,5 +4,6 @@ namespace ProjectManagementApp
     runtimeclass ProyectosPage : Microsoft.UI.Xaml.Controls.Page
     {
         ProyectosPage();
+        void SetProjectId(Int32 projectId);
     }
 }

@@ -36,51 +36,55 @@ namespace winrt::ProjectManagementApp::implementation
         closeDatabase();
     }
 
-    void MainPage::NavigationView_ItemInvoked(NavigationView const&, NavigationViewItemInvokedEventArgs const& args)
+    // En MainPage.xaml.cpp, actualiza la función NavigationView_ItemInvoked
+    void MainPage::NavigationView_ItemInvoked(NavigationView const& sender, NavigationViewItemInvokedEventArgs const& args)
     {
-        auto invokedItem = args.InvokedItem();
-        auto invokedItemContainer = args.InvokedItemContainer();
+        auto invokedContainer = args.InvokedItemContainer();
+        if (!invokedContainer) return;
 
-        if (invokedItemContainer != nullptr)
+        auto tag = invokedContainer.Tag();
+        if (!tag) return;
+
+        auto tagString = winrt::unbox_value<winrt::hstring>(tag);
+
+        if (tagString == L"Dashboard")
         {
-            auto tag = invokedItemContainer.Tag();
-            if (tag != nullptr)
+            openDashboardPage();
+        }
+        else if (tagString == L"Actividades")
+        {
+            openActividadesPage();
+        }
+        else if (tagString == L"Miembros")
+        {
+            openMiembrosPage();
+        }
+        else if (tagString == L"Proyectos")
+        {
+            openProyectosPage();
+        }
+        else
+        {
+            // Verificar si es un proyecto específico (el tag sería "proyecto_X" donde X es el ID)
+            std::wstring tagStr = tagString.c_str();
+            if (tagStr.find(L"proyecto_") == 0)
             {
-                auto tagString = winrt::unbox_value<winrt::hstring>(tag);
-
-                if (tagString == L"Dashboard")
+                try
                 {
-                    openDashboardPage();
+                    // Extraer el ID del proyecto del tag
+                    std::wstring projectIdStr = tagStr.substr(9); // "proyecto_".length() = 9
+                    int projectId = std::stoi(projectIdStr);
+                    openProyectosPageWithProject(projectId);
                 }
-                else if (tagString == L"Actividades")
+                catch (...)
                 {
-                    openActividadesPage();
-                }
-                else if (tagString == L"Miembros")
-                {
-                    openMiembrosPage();
-                }
-                else if (tagString == L"Proyectos")
-                {
+                    // Si hay error parsing el ID, abrir página de proyectos general
                     openProyectosPage();
-                }
-                else if (tagString.size() > 8 && std::wstring(tagString).substr(0, 8) == L"Project_")
-                {
-                    auto projectIdStr = std::wstring(tagString).substr(8);
-                    try
-                    {
-                        int projectId = std::stoi(projectIdStr);
-                        openProyectosPage();
-                    }
-                    catch (...)
-                    {
-                        openProyectosPage();
-                    }
                 }
             }
         }
     }
-
+    
     void MainPage::mainFrame_Navigated(IInspectable const&, NavigationEventArgs const& e)
     {
         nav().IsBackEnabled(mainFrame().CanGoBack());
@@ -213,73 +217,43 @@ namespace winrt::ProjectManagementApp::implementation
     {
         if (!db) return;
 
-        // Obtener el NavigationViewItem de Proyectos
+        // Limpiar elementos existentes del NavigationViewItem de Proyectos
         auto projectsNavItem = ProjectsNavItem();
-
-        // Limpiar items existentes
         projectsNavItem.MenuItems().Clear();
 
-        // Consulta SQL para obtener proyectos del usuario actual
-        const char* sql = R"(
-            SELECT proyecto_id, nombre, estado, prioridad 
-            FROM Proyectos 
-            WHERE responsable_id = ? 
-            ORDER BY nombre COLLATE NOCASE
-        )";
+        const char* sql = "SELECT DISTINCT p.proyecto_id, p.nombre FROM Proyectos p LEFT JOIN Actividades a ON p.proyecto_id = a.proyecto_id LEFT JOIN Asignaciones asig ON a.actividad_id = asig.actividad_id WHERE p.responsable_id = ? OR asig.usuario_id = ? ORDER BY p.nombre";
 
         sqlite3_stmt* stmt;
-        int result = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
 
-        if (result == SQLITE_OK)
+        if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK)
         {
-            // Bind del parámetro usuario_actual_id
             sqlite3_bind_int(stmt, 1, usuario_actual_id);
-
-            // Ejecutar la consulta y procesar resultados
+            sqlite3_bind_int(stmt, 2, usuario_actual_id);
             while (sqlite3_step(stmt) == SQLITE_ROW)
             {
                 int projectId = sqlite3_column_int(stmt, 0);
-                const char* nombrePtr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-                const char* estadoPtr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-                const char* prioridadPtr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+                const char* projectName = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
 
-                if (nombrePtr)
+                if (projectName)
                 {
-                    // Convertir de UTF-8 a UTF-16 para WinRT
-                    std::string nombreUtf8(nombrePtr);
-                    std::string estadoUtf8 = estadoPtr ? std::string(estadoPtr) : "";
-                    std::string prioridadUtf8 = prioridadPtr ? std::string(prioridadPtr) : "";
+                    // Crear NavigationViewItem para cada proyecto
+                    auto projectItem = NavigationViewItem();
+                    projectItem.Content(winrt::box_value(winrt::to_hstring(projectName)));
 
-                    // Conversión manual de UTF-8 a UTF-16
-                    int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, nombreUtf8.c_str(), -1, nullptr, 0);
-                    std::wstring nombreWide(sizeNeeded - 1, 0);
-                    MultiByteToWideChar(CP_UTF8, 0, nombreUtf8.c_str(), -1, &nombreWide[0], sizeNeeded);
+                    // Crear tag único para cada proyecto
+                    std::wstring tagStr = L"proyecto_" + std::to_wstring(projectId);
+                    projectItem.Tag(winrt::box_value(winrt::hstring(tagStr)));
 
-                    winrt::hstring projectName{ nombreWide };
-
-                    // Crear NavigationViewItem para el proyecto
-                    NavigationViewItem projectItem;
-                    projectItem.Content(winrt::box_value(projectName));
-
-                    // Crear tag único para el proyecto
-                    winrt::hstring projectTag = L"Project_" + winrt::to_hstring(projectId);
-                    projectItem.Tag(winrt::box_value(projectTag));
-
-                    // Agregar al NavigationViewItem de Proyectos
+                    // Agregar al elemento Proyectos
                     projectsNavItem.MenuItems().Append(projectItem);
                 }
             }
-
-            sqlite3_finalize(stmt);
         }
+        sqlite3_finalize(stmt);
+    }
 
-        // Si no hay proyectos, agregar un item informativo
-        if (projectsNavItem.MenuItems().Size() == 0)
-        {
-            NavigationViewItem noProjectsItem;
-            noProjectsItem.Content(winrt::box_value(L"Sin proyectos asignados"));
-            noProjectsItem.IsEnabled(false);
-            projectsNavItem.MenuItems().Append(noProjectsItem);
-        }
+    void MainPage::openProyectosPageWithProject(int projectId)
+    {
+        mainFrame().Navigate(winrt::xaml_typename<ProjectManagementApp::ProyectosPage>(), winrt::box_value(projectId));
     }
 }

@@ -17,6 +17,7 @@ namespace winrt::ProjectManagementApp::implementation
         void closeDatabase();
         int usuario_actual_id = 1;
         void cargarUsuarioActual();
+        void openProyectosPageWithProject(int projectId);
     public:
         MainPage()
         {
