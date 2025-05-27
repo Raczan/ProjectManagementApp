@@ -16,196 +16,143 @@
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
-
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using namespace Microsoft::UI::Xaml::Controls;
+using namespace Microsoft::UI::Xaml::Navigation;
+using namespace Windows::Foundation;
 
 namespace winrt::ProjectManagementApp::implementation
 {
-    void MainPage::Page_Loaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    void MainPage::Page_Loaded(IInspectable const&, RoutedEventArgs const&)
     {
+        openDatabase();
+        cargarUsuarioActual();
         LoadProjects();
-		openDatabase();
+        openDashboardPage();
+        nav().SelectedItem(nav().MenuItems().GetAt(0));
     }
 
-    void MainPage::LoadProjects()
-    {
-        try {
-            auto projectsNavItem = ProjectsNavItem();
-
-            if (projectsNavItem == nullptr) {
-                return;
-            }
-
-            projectsNavItem.MenuItems().Clear();
-            std::vector<hstring> projectsList = {
-              L"Ventas",
-              L"Cobros",
-              L"Clientes"
-            };
-
-            for (const auto& projectName : projectsList)
-            {
-                NavigationViewItem item;
-                item.Content(box_value(projectName));
-                projectsNavItem.MenuItems().Append(item);
-            }
-        }
-        catch (winrt::hresult_error const& ex) {
-            OutputDebugString((L"Error en LoadProjects: " + std::wstring(ex.message()) + L"\n").c_str());
-        }
-        catch (...) {
-            OutputDebugString(L"Error desconocido en LoadProjects\n");
-        }
-    }
-
-    void MainPage::Page_Unloaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    void MainPage::Page_Unloaded(IInspectable const&, RoutedEventArgs const&)
     {
         closeDatabase();
     }
 
-    void MainPage::NavigationView_ItemInvoked(winrt::Microsoft::UI::Xaml::Controls::NavigationView const& sender, winrt::Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs const& args)
+    void MainPage::NavigationView_ItemInvoked(NavigationView const&, NavigationViewItemInvokedEventArgs const& args)
     {
-        auto container = args.InvokedItemContainer();
-        if (container == nullptr)
-            return;
+        auto invokedItem = args.InvokedItem();
+        auto invokedItemContainer = args.InvokedItemContainer();
 
-        if (container.Tag() != nullptr) {
-            try {
-                hstring tag = unbox_value<hstring>(container.Tag());
+        if (invokedItemContainer != nullptr)
+        {
+            auto tag = invokedItemContainer.Tag();
+            if (tag != nullptr)
+            {
+                auto tagString = winrt::unbox_value<winrt::hstring>(tag);
 
-                if (tag == L"Dashboard")
+                if (tagString == L"Dashboard")
+                {
                     openDashboardPage();
-                else if (tag == L"Actividades")
+                }
+                else if (tagString == L"Actividades")
+                {
                     openActividadesPage();
-                else if (tag == L"Miembros")
+                }
+                else if (tagString == L"Miembros")
+                {
                     openMiembrosPage();
-            }
-            catch (...) {
-                OutputDebugString(L"Error desconocido en NavigationView_ItemInvoked\n");
+                }
+                else if (tagString == L"Proyectos")
+                {
+                    openProyectosPage();
+                }
+                else if (tagString.size() > 8 && std::wstring(tagString).substr(0, 8) == L"Project_")
+                {
+                    auto projectIdStr = std::wstring(tagString).substr(8);
+                    try
+                    {
+                        int projectId = std::stoi(projectIdStr);
+                        openProyectosPage();
+                    }
+                    catch (...)
+                    {
+                        openProyectosPage();
+                    }
+                }
             }
         }
     }
-    
-    void MainPage::mainFrame_Navigated(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs const& e)
+
+    void MainPage::mainFrame_Navigated(IInspectable const&, NavigationEventArgs const& e)
     {
         nav().IsBackEnabled(mainFrame().CanGoBack());
     }
 
-    void MainPage::nav_BackRequested(winrt::Microsoft::UI::Xaml::Controls::NavigationView const& sender, winrt::Microsoft::UI::Xaml::Controls::NavigationViewBackRequestedEventArgs const& args)
+    void MainPage::nav_BackRequested(NavigationView const&, NavigationViewBackRequestedEventArgs const&)
     {
-        mainFrame().GoBack();
+        if (mainFrame().CanGoBack())
+        {
+            mainFrame().GoBack();
+        }
     }
 
     void MainPage::openDashboardPage()
     {
-        mainFrame().Navigate(xaml_typename<DashboardPage>());
+        mainFrame().Navigate(xaml_typename<ProjectManagementApp::DashboardPage>());
     }
 
     void MainPage::openActividadesPage()
     {
-        mainFrame().Navigate(xaml_typename<ActividadesPage>());
+        mainFrame().Navigate(xaml_typename<ProjectManagementApp::ActividadesPage>());
     }
 
     void MainPage::openMiembrosPage()
     {
-        mainFrame().Navigate(xaml_typename<MiembrosPage>());
+        mainFrame().Navigate(xaml_typename<ProjectManagementApp::MiembrosPage>());
     }
 
     void MainPage::openProyectosPage()
     {
-        mainFrame().Navigate(xaml_typename<ProyectosPage>());
+        mainFrame().Navigate(xaml_typename<ProjectManagementApp::ProyectosPage>());
     }
 
-    void MainPage::openDatabase() {
-        std::wstring appDataPath = winrt::Windows::Storage::ApplicationData::Current().LocalFolder().Path().c_str();
-        std::string dbPath = winrt::to_string(appDataPath) + "\\projectmanagement.db";
-        OutputDebugStringA(("Intentando abrir/crear base de datos: " + dbPath + "\n").c_str());
+    void MainPage::openDatabase()
+    {
+        try
+        {
+            auto localFolder = Windows::Storage::ApplicationData::Current().LocalFolder();
+            auto localFolderPath = localFolder.Path();
+            std::wstring dbPath = std::wstring(localFolderPath) + L"\\projectmanagement.db";
 
+            // Convertir a string para SQLite
+            std::string dbPathStr(dbPath.begin(), dbPath.end());
 
-        bool dbExists = std::filesystem::exists(dbPath);
-        OutputDebugStringA(dbExists ? "Base de datos ya existe\n" : "Base de datos no existe, se creará nueva\n");
-
-        int rc = sqlite3_open(dbPath.c_str(), &db);
-        if (rc != SQLITE_OK) {
-            const char* errorMsg = sqlite3_errmsg(db);
-            std::string error = "ERROR al abrir base de datos: " + std::string(errorMsg) + "\n";
-            OutputDebugStringA(error.c_str());
-            return;
-        }
-
-        OutputDebugStringA("Base de datos abierta correctamente\n");
-
-        if (!dbExists) {
-            try {
-                wchar_t modulePath[MAX_PATH];
-                GetModuleFileNameW(NULL, modulePath, MAX_PATH);
-                std::filesystem::path exePath(modulePath);
-                std::filesystem::path sqlFilePath = exePath.parent_path() / "projectmanagement.sql";
-
-                std::ifstream sqlFile(sqlFilePath);
-                if (!sqlFile.is_open()) {
-                    std::string error = "ERROR: No se pudo abrir el archivo SQL\n";
-                    OutputDebugStringA(error.c_str());
-                    return;
-                }
-
-                OutputDebugStringA("Archivo SQL abierto correctamente, leyendo contenido\n");
-
-                std::stringstream buffer;
-                buffer << sqlFile.rdbuf();
-                std::string sqlScript = buffer.str();
-                sqlFile.close();
-
-
-                char* errorMsg = nullptr;
-                OutputDebugStringA("Ejecutando script SQL\n");
-
-                const char* pzTail = sqlScript.c_str();
-                sqlite3_stmt* stmt;
-                int statementCount = 0;
-
-                while (*pzTail) {
-                    rc = sqlite3_prepare_v2(db, pzTail, -1, &stmt, &pzTail);
-                    if (rc != SQLITE_OK) {
-                        std::string prepareError = "Error preparando sentencia SQL: " + std::string(sqlite3_errmsg(db)) + "\n";
-                        OutputDebugStringA(prepareError.c_str());
-                        continue;
-                    }
-
-                    if (stmt) {
-                        statementCount++;
-                        rc = sqlite3_step(stmt);
-                        if (rc != SQLITE_DONE && rc != SQLITE_ROW) {
-                            std::string execError = "Error ejecutando sentencia SQL: " + std::string(sqlite3_errmsg(db)) + "\n";
-                            OutputDebugStringA(execError.c_str());
-                        }
-                        sqlite3_finalize(stmt);
-                    }
-                }
-
-                OutputDebugStringA(("Inicialización completa. Sentencias ejecutadas: " + std::to_string(statementCount) + "\n").c_str());
-            }
-            catch (const std::exception& e) {
-                std::string error = "Excepción al inicializar la base de datos: " + std::string(e.what()) + "\n";
-                OutputDebugStringA(error.c_str());
+            int result = sqlite3_open(dbPathStr.c_str(), &db);
+            if (result != SQLITE_OK)
+            {
+                // Error al abrir la base de datos
+                db = nullptr;
             }
         }
-
-        cargarUsuarioActual();
+        catch (...)
+        {
+            db = nullptr;
+        }
     }
 
-    void MainPage::closeDatabase() {
-        if (db != nullptr) {
-            OutputDebugStringA("Cerrando conexión a base de datos\n");
+    void MainPage::closeDatabase()
+    {
+        if (db)
+        {
             sqlite3_close(db);
             db = nullptr;
-            OutputDebugStringA("Conexión cerrada\n");
         }
     }
 
-    void MainPage::cargarUsuarioActual() {
+    void MainPage::cargarUsuarioActual()
+    {
+        // Establecer usuario ID 1 como predeterminado
+        usuario_actual_id = 1;
+
+        // Cargar datos completos del usuario desde la base de datos
         if (db == nullptr) return;
 
         std::string sql = "SELECT nombre, apellido, departamento, url_imagen_perfil FROM Usuarios WHERE usuario_id = ? LIMIT 1";
@@ -223,6 +170,7 @@ namespace winrt::ProjectManagementApp::implementation
             const char* departamento = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
             const char* url_imagen = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
 
+            // Actualizar nombre del usuario
             std::string nombreCompleto;
             if (nombre) nombreCompleto += nombre;
             if (apellido) nombreCompleto += " " + std::string(apellido);
@@ -232,11 +180,13 @@ namespace winrt::ProjectManagementApp::implementation
                 userName.Text(winrt::to_hstring(nombreCompleto));
             }
 
+            // Actualizar rol/departamento del usuario
             auto userRole = this->FindName(L"UserRoleText").as<winrt::Microsoft::UI::Xaml::Controls::TextBlock>();
             if (userRole && departamento) {
                 userRole.Text(winrt::to_hstring(departamento));
             }
 
+            // Cargar imagen de perfil
             if (url_imagen && strlen(url_imagen) > 0) {
                 try {
                     auto userPicture = this->FindName(L"UserPicture").as<winrt::Microsoft::UI::Xaml::Controls::PersonPicture>();
@@ -250,11 +200,86 @@ namespace winrt::ProjectManagementApp::implementation
                     }
                 }
                 catch (const winrt::hresult_error& ex) {
+                    // Error al cargar imagen - continuar sin imagen
                     OutputDebugStringW((L"Error al cargar imagen: " + ex.message() + L"\n").c_str());
                 }
             }
         }
 
         sqlite3_finalize(stmt);
+    }
+
+    void MainPage::LoadProjects()
+    {
+        if (!db) return;
+
+        // Obtener el NavigationViewItem de Proyectos
+        auto projectsNavItem = ProjectsNavItem();
+
+        // Limpiar items existentes
+        projectsNavItem.MenuItems().Clear();
+
+        // Consulta SQL para obtener proyectos del usuario actual
+        const char* sql = R"(
+            SELECT proyecto_id, nombre, estado, prioridad 
+            FROM Proyectos 
+            WHERE responsable_id = ? 
+            ORDER BY nombre COLLATE NOCASE
+        )";
+
+        sqlite3_stmt* stmt;
+        int result = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+
+        if (result == SQLITE_OK)
+        {
+            // Bind del parámetro usuario_actual_id
+            sqlite3_bind_int(stmt, 1, usuario_actual_id);
+
+            // Ejecutar la consulta y procesar resultados
+            while (sqlite3_step(stmt) == SQLITE_ROW)
+            {
+                int projectId = sqlite3_column_int(stmt, 0);
+                const char* nombrePtr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+                const char* estadoPtr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+                const char* prioridadPtr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+
+                if (nombrePtr)
+                {
+                    // Convertir de UTF-8 a UTF-16 para WinRT
+                    std::string nombreUtf8(nombrePtr);
+                    std::string estadoUtf8 = estadoPtr ? std::string(estadoPtr) : "";
+                    std::string prioridadUtf8 = prioridadPtr ? std::string(prioridadPtr) : "";
+
+                    // Conversión manual de UTF-8 a UTF-16
+                    int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, nombreUtf8.c_str(), -1, nullptr, 0);
+                    std::wstring nombreWide(sizeNeeded - 1, 0);
+                    MultiByteToWideChar(CP_UTF8, 0, nombreUtf8.c_str(), -1, &nombreWide[0], sizeNeeded);
+
+                    winrt::hstring projectName{ nombreWide };
+
+                    // Crear NavigationViewItem para el proyecto
+                    NavigationViewItem projectItem;
+                    projectItem.Content(winrt::box_value(projectName));
+
+                    // Crear tag único para el proyecto
+                    winrt::hstring projectTag = L"Project_" + winrt::to_hstring(projectId);
+                    projectItem.Tag(winrt::box_value(projectTag));
+
+                    // Agregar al NavigationViewItem de Proyectos
+                    projectsNavItem.MenuItems().Append(projectItem);
+                }
+            }
+
+            sqlite3_finalize(stmt);
+        }
+
+        // Si no hay proyectos, agregar un item informativo
+        if (projectsNavItem.MenuItems().Size() == 0)
+        {
+            NavigationViewItem noProjectsItem;
+            noProjectsItem.Content(winrt::box_value(L"Sin proyectos asignados"));
+            noProjectsItem.IsEnabled(false);
+            projectsNavItem.MenuItems().Append(noProjectsItem);
+        }
     }
 }
