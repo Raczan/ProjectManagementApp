@@ -1,15 +1,34 @@
-# Aplicación de Gestión de Proyectos
+# UMGPlan - Sistema de Gestión de Proyectos
 
-Una aplicación de gestión de proyectos y actividades basada en WinUI 3, desarrollada en C++.
+## 📚 Documentación
+- [📋 Documentación del Proyecto](ProjectManagementApp/docs/documentacion.pdf)
+- [🎥 Video Demostración](ProjectManagementApp/docs/video-demo.md)
+- [🗄️ Script de Base de Datos](ProjectManagementApp/Resources/projectmanagement.sql)
 
-## Funcionalidades Planeadas
+## Descripción
+Sistema integral de gestión de proyectos desarrollado con WinUI 3 y C++/WinRT para facilitar el seguimiento, control y administración de proyectos empresariales.
 
-- Gestión de tareas
-- Asignación de recursos
-- Seguimiento del tiempo
-- Tableros Kanban
+## Características Principales
+- **Dashboard centralizado** con métricas en tiempo real
+- **Gestión completa de miembros** del equipo por departamentos
+- **Administración de actividades** con sistema de prioridades
+- **Seguimiento de proyectos** con métricas de progreso
+- **CRUD completo** para todas las entidades del sistema
 
-## Requisitos
+## Tecnologías Utilizadas
+- C++/WinRT
+- WinUI 3
+- SQLite 3
+- Visual Studio 2022
 
-- Windows 10 versión 1809 o superior
-- Redistribuible de Visual C++ para Visual Studio 2022
+## Estructura de Base de Datos
+- **Usuarios**: Información de miembros del equipo
+- **Proyectos**: Datos principales de cada proyecto  
+- **Actividades**: Tareas específicas de los proyectos
+- **Asignaciones**: Relación entre usuarios y actividades
+
+---
+**Desarrollado por**: Miguel Angel Raczán Quisquinay  
+**Universidad**: Mariano Galvez de Guatemala  
+**Curso**: Programación I - 12025-0910-012-A  
+**Fecha**: 31 de mayo de 2025
