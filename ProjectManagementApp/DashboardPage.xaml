@@ -19,7 +19,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Título y descripción -->
             <TextBlock 
                 Grid.Row="0"
                 Text="Dashboard"   
@@ -34,7 +33,6 @@
                 Opacity="0.8"
                 Margin="0,0,0,24"/>
 
-            <!-- Tarjetas de resumen -->
             <Grid Grid.Row="2" Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -43,7 +41,6 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Proyectos activos -->
                 <Border Grid.Column="0" Margin="0,0,8,0" 
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -59,7 +56,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Actividades totales -->
                 <Border Grid.Column="1" Margin="8,0,8,0"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -75,7 +71,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Actividades completadas -->
                 <Border Grid.Column="2" Margin="8,0,8,0"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -91,7 +86,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Próximos a vencer -->
                 <Border Grid.Column="3" Margin="8,0,0,0"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -108,14 +102,12 @@
                 </Border>
             </Grid>
 
-            <!-- Mis Actividades y Mis Proyectos -->
             <Grid Grid.Row="3" Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Mis Actividades -->
                 <Grid Grid.Column="0" Margin="0,0,12,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -174,7 +166,6 @@
                     </Border>
                 </Grid>
 
-                <!-- Mis Proyectos -->
                 <Grid Grid.Column="1" Margin="12,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -240,7 +231,6 @@
                 </Grid>
             </Grid>
 
-            <!-- Miembros -->
             <Grid Grid.Row="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

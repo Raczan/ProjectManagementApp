@@ -13,11 +13,8 @@ namespace winrt::ProjectManagementApp::implementation
     AddMemberDialog::AddMemberDialog()
     {
         InitializeComponent();
-
-        // Conectar el evento del botón primario
         PrimaryButtonClick({ this, &AddMemberDialog::ContentDialog_PrimaryButtonClick });
 
-        // Configurar para modo agregar
         m_isEditMode = false;
         m_userId = 0;
     }
@@ -26,21 +23,16 @@ namespace winrt::ProjectManagementApp::implementation
         winrt::hstring const& email, winrt::hstring const& phone, winrt::hstring const& department)
     {
         InitializeComponent();
-
-        // Conectar el evento del botón primario
         PrimaryButtonClick({ this, &AddMemberDialog::ContentDialog_PrimaryButtonClick });
 
-        // Configurar para modo edición
         m_isEditMode = true;
         m_userId = userId;
 
-        // Prellenar los campos
         FirstNameTextBox().Text(firstName);
         LastNameTextBox().Text(lastName);
         EmailTextBox().Text(email);
         PhoneTextBox().Text(phone);
 
-        // Seleccionar el departamento en el ComboBox
         for (uint32_t i = 0; i < DepartmentComboBox().Items().Size(); ++i)
         {
             auto item = DepartmentComboBox().Items().GetAt(i).as<Controls::ComboBoxItem>();
@@ -108,17 +100,14 @@ namespace winrt::ProjectManagementApp::implementation
     void AddMemberDialog::ContentDialog_PrimaryButtonClick(ContentDialog const& sender,
         ContentDialogButtonClickEventArgs const& args)
     {
-        // Validar la entrada antes de cerrar el diálogo
         if (!ValidateInput())
         {
-            // Cancelar el cierre del diálogo si la validación falla
             args.Cancel(true);
         }
     }
 
     bool AddMemberDialog::ValidateInput()
     {
-        // Validar campos obligatorios
         if (FirstNameTextBox().Text().empty())
         {
             ShowErrorMessage(L"El nombre es obligatorio");
@@ -152,6 +141,5 @@ namespace winrt::ProjectManagementApp::implementation
 
     void AddMemberDialog::ShowErrorMessage(winrt::hstring const& message)
     {
-		// Implementar la lógica para mostrar un mensaje de error al usuario
     }
 }

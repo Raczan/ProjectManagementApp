@@ -29,7 +29,6 @@ namespace winrt::ProjectManagementApp::implementation
         sqlite3_stmt* stmt = nullptr;
         int rc;
 
-        // Abrimos la base de datos directamente
         winrt::hstring dbPath = Windows::Storage::ApplicationData::Current().LocalFolder().Path() + L"\\projectmanagement.db";
         std::string dbPathUtf8 = winrt::to_string(dbPath);
         rc = sqlite3_open(dbPathUtf8.c_str(), &db);
@@ -37,7 +36,6 @@ namespace winrt::ProjectManagementApp::implementation
             return;
         }
 
-        // Consultar la vista dashboard_resumen
         const char* sql = "SELECT * FROM vista_dashboard_resumen";
         rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
@@ -45,7 +43,6 @@ namespace winrt::ProjectManagementApp::implementation
             return;
         }
 
-        // Ejecutar la consulta
         if (sqlite3_step(stmt) == SQLITE_ROW) {
             int proyectosActivos = sqlite3_column_int(stmt, 0);
             int totalTareas = sqlite3_column_int(stmt, 1);
@@ -68,7 +65,6 @@ namespace winrt::ProjectManagementApp::implementation
         sqlite3_stmt* stmt = nullptr;
         int rc;
 
-        // Abrimos la base de datos
         winrt::hstring dbPath = Windows::Storage::ApplicationData::Current().LocalFolder().Path() + L"\\projectmanagement.db";
         std::string dbPathUtf8 = winrt::to_string(dbPath);
         rc = sqlite3_open(dbPathUtf8.c_str(), &db);
@@ -76,7 +72,6 @@ namespace winrt::ProjectManagementApp::implementation
             return;
         }
 
-        // Consulta para obtener las actividades del usuario actual
         const char* sql = R"(
             SELECT 
                 a.nombre as actividad_nombre,
@@ -97,27 +92,20 @@ namespace winrt::ProjectManagementApp::implementation
             return;
         }
 
-        // Bind del parámetro usuario_id
         sqlite3_bind_int(stmt, 1, currentUserId);
-
-        // Crear colección observable para las actividades
         activitiesCollection = winrt::single_threaded_observable_vector<IInspectable>();
 
-        // Ejecutar la consulta y procesar resultados
         while (sqlite3_step(stmt) == SQLITE_ROW) {
-            // Obtener datos de la consulta
             const char* actividadNombre = (const char*)sqlite3_column_text(stmt, 0);
             const char* proyectoNombre = (const char*)sqlite3_column_text(stmt, 1);
             const char* fechaFin = (const char*)sqlite3_column_text(stmt, 2);
             const char* estado = (const char*)sqlite3_column_text(stmt, 3);
 
-            // Convertir a hstring
             winrt::hstring actividadName = winrt::to_hstring(actividadNombre ? actividadNombre : "");
             winrt::hstring projectName = winrt::to_hstring(proyectoNombre ? proyectoNombre : "");
             winrt::hstring dueDate = winrt::to_hstring(fechaFin ? fechaFin : "");
             winrt::hstring statusText = winrt::to_hstring(estado ? estado : "");
 
-            // Crear objeto para mostrar en la lista usando PropertySet
             Windows::Foundation::Collections::PropertySet activityItem;
 
             activityItem.Insert(L"ActivityName", winrt::box_value(actividadName));
@@ -125,7 +113,6 @@ namespace winrt::ProjectManagementApp::implementation
             activityItem.Insert(L"DueDate", winrt::box_value(dueDate));
             activityItem.Insert(L"Status", winrt::box_value(statusText));
 
-            // Agregar colores basados en estado
             winrt::hstring bgColor, textColor;
             if (statusText == L"Pendiente") {
                 bgColor = L"#FFF8E1"; textColor = L"#F57C00";
@@ -147,7 +134,6 @@ namespace winrt::ProjectManagementApp::implementation
             activitiesCollection.Append(winrt::box_value(activityItem));
         }
 
-        // Asignar la colección al ListView
         ActivitiesList().ItemsSource(activitiesCollection);
 
         sqlite3_finalize(stmt);
@@ -205,7 +191,6 @@ namespace winrt::ProjectManagementApp::implementation
             projectItem.Insert(L"Status", winrt::box_value(statusText));
             projectItem.Insert(L"ActivityCount", winrt::box_value(winrt::to_hstring(totalActividades) + L" Actividades"));
 
-            // Colores para proyectos
             winrt::hstring bgColor, textColor;
             if (statusText == L"Pendiente") {
                 bgColor = L"#FFF8E1"; textColor = L"#F57C00";

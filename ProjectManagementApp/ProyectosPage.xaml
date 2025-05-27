@@ -17,7 +17,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Título del proyecto -->
         <TextBlock 
             Grid.Row="0"
             x:Name="ProjectTitle"
@@ -26,7 +25,6 @@
             FontSize="28"
             Margin="0,0,0,8"/>
 
-        <!-- Descripción del proyecto -->
         <TextBlock 
             Grid.Row="1"
             x:Name="ProjectDescription"
@@ -35,7 +33,6 @@
             Opacity="0.8"
             Margin="0,0,0,16"/>
 
-        <!-- Información del proyecto -->
         <Border Grid.Row="2" 
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -51,7 +48,6 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Icono del proyecto -->
                 <Border Grid.Column="0" 
                         Width="40" Height="40" 
                         Background="{ThemeResource AccentFillColorDefaultBrush}"
@@ -64,7 +60,6 @@
                               VerticalAlignment="Center"/>
                 </Border>
 
-                <!-- Información básica -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
                     <TextBlock x:Name="ProjectNameText" 
                                Text="Nombre del Proyecto" 
@@ -90,7 +85,6 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Estadísticas -->
                 <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="4" Margin="16,0">
                     <TextBlock Text="Actividades" 
                                Style="{StaticResource CaptionTextBlockStyle}" 
@@ -103,7 +97,6 @@
                                HorizontalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Progreso -->
                 <StackPanel Grid.Column="3" VerticalAlignment="Center" Spacing="4">
                     <TextBlock Text="Completado" 
                                Style="{StaticResource CaptionTextBlockStyle}" 
@@ -118,7 +111,6 @@
             </Grid>
         </Border>
 
-        <!-- Tabla de actividades -->
         <Border Grid.Row="3" 
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -131,7 +123,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Encabezados de la tabla -->
                 <Border Grid.Row="0" 
                         Background="{ThemeResource ControlFillColorDefaultBrush}"
                         CornerRadius="8,8,0,0"
@@ -166,7 +157,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Lista de actividades -->
                 <ListView x:Name="ActivitiesListView" 
                           Grid.Row="1"
                           SelectionMode="Multiple"
@@ -196,10 +186,8 @@
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Checkbox -->
                                 <CheckBox Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                                <!-- Nombre de actividad -->
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
                                     <TextBlock Text="{Binding ActivityName}" 
                                                Style="{StaticResource BodyTextBlockStyle}"
@@ -212,7 +200,6 @@
                                                MaxLines="2"/>
                                 </StackPanel>
 
-                                <!-- Asignados (avatares) -->
                                 <StackPanel Grid.Column="2" 
                                             Orientation="Horizontal" 
                                             VerticalAlignment="Center"
@@ -231,13 +218,11 @@
                                     </Border>
                                 </StackPanel>
 
-                                <!-- Fecha límite -->
                                 <TextBlock Grid.Column="3" 
                                            Text="{Binding DueDate}" 
                                            Style="{StaticResource BodyTextBlockStyle}"
                                            VerticalAlignment="Center"/>
 
-                                <!-- Prioridad -->
                                 <Border Grid.Column="4" 
                                         Background="{Binding PriorityBackgroundColor}"
                                         CornerRadius="12"
@@ -251,7 +236,6 @@
                                                VerticalAlignment="Center"/>
                                 </Border>
 
-                                <!-- Estado -->
                                 <Border Grid.Column="5" 
                                         Background="{Binding StatusBackgroundColor}"
                                         CornerRadius="12"
@@ -274,7 +258,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <!-- Mensaje cuando no hay actividades -->
                 <StackPanel x:Name="EmptyStatePanel"
                             Grid.Row="1"
                             HorizontalAlignment="Center"

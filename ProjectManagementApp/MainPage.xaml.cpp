@@ -36,7 +36,6 @@ namespace winrt::ProjectManagementApp::implementation
         closeDatabase();
     }
 
-    // En MainPage.xaml.cpp, actualiza la función NavigationView_ItemInvoked
     void MainPage::NavigationView_ItemInvoked(NavigationView const& sender, NavigationViewItemInvokedEventArgs const& args)
     {
         auto invokedContainer = args.InvokedItemContainer();
@@ -65,20 +64,17 @@ namespace winrt::ProjectManagementApp::implementation
         }
         else
         {
-            // Verificar si es un proyecto específico (el tag sería "proyecto_X" donde X es el ID)
             std::wstring tagStr = tagString.c_str();
             if (tagStr.find(L"proyecto_") == 0)
             {
                 try
                 {
-                    // Extraer el ID del proyecto del tag
-                    std::wstring projectIdStr = tagStr.substr(9); // "proyecto_".length() = 9
+                    std::wstring projectIdStr = tagStr.substr(9);
                     int projectId = std::stoi(projectIdStr);
                     openProyectosPageWithProject(projectId);
                 }
                 catch (...)
                 {
-                    // Si hay error parsing el ID, abrir página de proyectos general
                     openProyectosPage();
                 }
             }
@@ -126,13 +122,11 @@ namespace winrt::ProjectManagementApp::implementation
             auto localFolderPath = localFolder.Path();
             std::wstring dbPath = std::wstring(localFolderPath) + L"\\projectmanagement.db";
 
-            // Convertir a string para SQLite
             std::string dbPathStr(dbPath.begin(), dbPath.end());
 
             int result = sqlite3_open(dbPathStr.c_str(), &db);
             if (result != SQLITE_OK)
             {
-                // Error al abrir la base de datos
                 db = nullptr;
             }
         }
@@ -153,10 +147,7 @@ namespace winrt::ProjectManagementApp::implementation
 
     void MainPage::cargarUsuarioActual()
     {
-        // Establecer usuario ID 1 como predeterminado
         usuario_actual_id = 1;
-
-        // Cargar datos completos del usuario desde la base de datos
         if (db == nullptr) return;
 
         std::string sql = "SELECT nombre, apellido, departamento, url_imagen_perfil FROM Usuarios WHERE usuario_id = ? LIMIT 1";
@@ -174,7 +165,6 @@ namespace winrt::ProjectManagementApp::implementation
             const char* departamento = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
             const char* url_imagen = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
 
-            // Actualizar nombre del usuario
             std::string nombreCompleto;
             if (nombre) nombreCompleto += nombre;
             if (apellido) nombreCompleto += " " + std::string(apellido);
@@ -184,13 +174,11 @@ namespace winrt::ProjectManagementApp::implementation
                 userName.Text(winrt::to_hstring(nombreCompleto));
             }
 
-            // Actualizar rol/departamento del usuario
             auto userRole = this->FindName(L"UserRoleText").as<winrt::Microsoft::UI::Xaml::Controls::TextBlock>();
             if (userRole && departamento) {
                 userRole.Text(winrt::to_hstring(departamento));
             }
 
-            // Cargar imagen de perfil
             if (url_imagen && strlen(url_imagen) > 0) {
                 try {
                     auto userPicture = this->FindName(L"UserPicture").as<winrt::Microsoft::UI::Xaml::Controls::PersonPicture>();
@@ -204,7 +192,6 @@ namespace winrt::ProjectManagementApp::implementation
                     }
                 }
                 catch (const winrt::hresult_error& ex) {
-                    // Error al cargar imagen - continuar sin imagen
                     OutputDebugStringW((L"Error al cargar imagen: " + ex.message() + L"\n").c_str());
                 }
             }
@@ -217,7 +204,6 @@ namespace winrt::ProjectManagementApp::implementation
     {
         if (!db) return;
 
-        // Limpiar elementos existentes del NavigationViewItem de Proyectos
         auto projectsNavItem = ProjectsNavItem();
         projectsNavItem.MenuItems().Clear();
 
@@ -236,15 +222,12 @@ namespace winrt::ProjectManagementApp::implementation
 
                 if (projectName)
                 {
-                    // Crear NavigationViewItem para cada proyecto
                     auto projectItem = NavigationViewItem();
                     projectItem.Content(winrt::box_value(winrt::to_hstring(projectName)));
 
-                    // Crear tag único para cada proyecto
                     std::wstring tagStr = L"proyecto_" + std::to_wstring(projectId);
                     projectItem.Tag(winrt::box_value(winrt::hstring(tagStr)));
 
-                    // Agregar al elemento Proyectos
                     projectsNavItem.MenuItems().Append(projectItem);
                 }
             }

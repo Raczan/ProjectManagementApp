@@ -10,7 +10,6 @@ namespace winrt::ProjectManagementApp::implementation
         AddMemberDialog(int32_t userId, winrt::hstring const& firstName, winrt::hstring const& lastName,
             winrt::hstring const& email, winrt::hstring const& phone, winrt::hstring const& department);
 
-        // Propiedades para obtener los valores ingresados
         winrt::hstring FirstName();
         winrt::hstring LastName();
         winrt::hstring Email();
@@ -19,7 +18,6 @@ namespace winrt::ProjectManagementApp::implementation
         int32_t UserId();
         bool IsEditMode();
 
-        // Eventos
         void ContentDialog_PrimaryButtonClick(winrt::Microsoft::UI::Xaml::Controls::ContentDialog const& sender,
             winrt::Microsoft::UI::Xaml::Controls::ContentDialogButtonClickEventArgs const& args);
 
@@ -28,7 +26,6 @@ namespace winrt::ProjectManagementApp::implementation
         void ShowErrorMessage(winrt::hstring const& message);
         void SetupForEditMode();
 
-        // Variables miembro
         int32_t m_userId = 0;
         bool m_isEditMode = false;
     };

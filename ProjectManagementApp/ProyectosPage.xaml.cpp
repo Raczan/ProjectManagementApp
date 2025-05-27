@@ -15,13 +15,11 @@ namespace winrt::ProjectManagementApp::implementation
 {
     void ProyectosPage::Page_Loaded(IInspectable const& sender, RoutedEventArgs const& e)
     {
-        // Solo abrir DB si no está abierta ya
         if (!db)
         {
             openDatabase();
         }
 
-        // Solo cargar si no se ha cargado ya en OnNavigatedTo
         if (currentProjectId > 0 && (!activitiesCollection || activitiesCollection.Size() == 0))
         {
             loadProjectInfo();
@@ -36,10 +34,8 @@ namespace winrt::ProjectManagementApp::implementation
             currentProjectId = winrt::unbox_value<int>(e.Parameter());
         }
 
-        // Abrir base de datos aquí también
         openDatabase();
 
-        // Cargar datos inmediatamente si tenemos el ID
         if (currentProjectId > 0)
         {
             loadProjectInfo();
@@ -60,7 +56,6 @@ namespace winrt::ProjectManagementApp::implementation
             auto localFolderPath = localFolder.Path();
             std::wstring dbPath = std::wstring(localFolderPath) + L"\\projectmanagement.db";
 
-            // Convertir a string para SQLite
             std::string dbPathStr(dbPath.begin(), dbPath.end());
 
             int rc = sqlite3_open(dbPathStr.c_str(), &db);
@@ -114,7 +109,6 @@ namespace winrt::ProjectManagementApp::implementation
 
             if (sqlite3_step(stmt) == SQLITE_ROW)
             {
-                // Nombre del proyecto
                 const char* name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
                 if (name)
                 {
@@ -123,27 +117,23 @@ namespace winrt::ProjectManagementApp::implementation
                     ProjectNameText().Text(projectName);
                 }
 
-                // Estado del proyecto
                 const char* status = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
                 if (status)
                 {
                     ProjectStatusText().Text(winrt::to_hstring(status));
                 }
 
-                // Fecha límite
                 const char* dueDate = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
                 if (dueDate)
                 {
                     ProjectDueDateText().Text(winrt::to_hstring(dueDate));
                 }
 
-                // Estadísticas
                 int totalActivities = sqlite3_column_int(stmt, 4);
                 int completedActivities = sqlite3_column_int(stmt, 5);
 
                 TotalActivitiesText().Text(winrt::to_hstring(std::to_string(totalActivities)));
 
-                // Calcular porcentaje de completado
                 int percentage = totalActivities > 0 ? (completedActivities * 100) / totalActivities : 0;
                 CompletedPercentageText().Text(winrt::to_hstring(std::to_string(percentage) + "%"));
             }
@@ -192,7 +182,6 @@ namespace winrt::ProjectManagementApp::implementation
                 {
                     auto activity = PropertySet();
 
-                    // Información básica de la actividad
                     const char* activityName = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
                     const char* activityDescription = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
                     const char* dueDate = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
@@ -205,18 +194,15 @@ namespace winrt::ProjectManagementApp::implementation
                     activity.Insert(L"Status", winrt::box_value(status ? winrt::to_hstring(status) : L"Pendiente"));
                     activity.Insert(L"Priority", winrt::box_value(priority ? winrt::to_hstring(priority) : L"Media"));
 
-                    // Colores de estado
                     std::string statusStr = status ? status : "Pendiente";
                     activity.Insert(L"StatusColor", winrt::box_value(getStatusColor(statusStr)));
                     activity.Insert(L"StatusBackgroundColor", winrt::box_value(getStatusBackgroundColor(statusStr)));
                     activity.Insert(L"StatusTextColor", winrt::box_value(getStatusTextColor(statusStr)));
 
-                    // Colores de prioridad
                     std::string priorityStr = priority ? priority : "Media";
                     activity.Insert(L"PriorityBackgroundColor", winrt::box_value(getPriorityBackgroundColor(priorityStr)));
                     activity.Insert(L"PriorityTextColor", winrt::box_value(getPriorityTextColor(priorityStr)));
 
-                    // Información del asignado principal
                     const char* assigneeName = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6));
                     const char* assigneeImage = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7));
                     int totalAssignees = sqlite3_column_int(stmt, 8);
@@ -224,7 +210,6 @@ namespace winrt::ProjectManagementApp::implementation
                     activity.Insert(L"AssigneeName", winrt::box_value(assigneeName ? winrt::to_hstring(assigneeName) : L"Sin asignar"));
                     activity.Insert(L"AssigneeImageUrl", winrt::box_value(assigneeImage ? winrt::to_hstring(assigneeImage) : L""));
 
-                    // Múltiples asignados
                     if (totalAssignees > 1)
                     {
                         activity.Insert(L"HasMultipleAssignees", winrt::box_value(Visibility::Visible));
@@ -240,18 +225,14 @@ namespace winrt::ProjectManagementApp::implementation
                 }
             }
 
-            // Agregar actividades únicas a la colección
             for (const auto& pair : activityMap)
             {
                 activitiesCollection.Append(winrt::box_value(pair.second));
             }
         }
         sqlite3_finalize(stmt);
-
-        // Asignar la colección al ListView
         ActivitiesListView().ItemsSource(activitiesCollection);
 
-        // Mostrar/ocultar panel vacío
         if (activitiesCollection.Size() == 0)
         {
             ActivitiesListView().Visibility(Visibility::Collapsed);

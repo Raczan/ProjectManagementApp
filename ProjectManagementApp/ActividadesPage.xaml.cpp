@@ -55,7 +55,6 @@ namespace winrt::ProjectManagementApp::implementation
 
         activitiesCollection = single_threaded_observable_vector<IInspectable>();
 
-        // Query para obtener las actividades del usuario actual
         std::string query = R"(
             SELECT 
                 a.actividad_id,
@@ -88,10 +87,8 @@ namespace winrt::ProjectManagementApp::implementation
 
             while (sqlite3_step(stmt) == SQLITE_ROW)
             {
-                // Crear un objeto para cada actividad
                 auto activityMap = single_threaded_map<hstring, IInspectable>();
 
-                // Obtener datos de la consulta
                 const char* activityName = (const char*)sqlite3_column_text(stmt, 1);
                 const char* projectName = (const char*)sqlite3_column_text(stmt, 2);
                 const char* dueDate = (const char*)sqlite3_column_text(stmt, 3);
@@ -99,7 +96,6 @@ namespace winrt::ProjectManagementApp::implementation
                 const char* assigneeName = (const char*)sqlite3_column_text(stmt, 5);
                 const char* assigneeImage = (const char*)sqlite3_column_text(stmt, 6);
 
-                // Llenar el mapa con los datos
                 activityMap.Insert(L"ActivityName", box_value(to_hstring(activityName ? activityName : "")));
                 activityMap.Insert(L"ProjectName", box_value(to_hstring(projectName ? projectName : "")));
                 activityMap.Insert(L"DueDate", box_value(to_hstring(dueDate ? dueDate : "")));
@@ -107,13 +103,11 @@ namespace winrt::ProjectManagementApp::implementation
                 activityMap.Insert(L"AssigneeName", box_value(to_hstring(assigneeName ? assigneeName : "")));
                 activityMap.Insert(L"AssigneeImageUrl", box_value(to_hstring(assigneeImage ? assigneeImage : "")));
 
-                // Colores según el estado
                 std::string statusStr = status ? status : "";
                 activityMap.Insert(L"StatusColor", box_value(getStatusColor(statusStr)));
                 activityMap.Insert(L"StatusBackgroundColor", box_value(getStatusBackgroundColor(statusStr)));
                 activityMap.Insert(L"StatusTextColor", box_value(getStatusTextColor(statusStr)));
 
-                // Para múltiples asignados (por ahora solo uno)
                 activityMap.Insert(L"HasMultipleAssignees", box_value(L"Collapsed"));
                 activityMap.Insert(L"AdditionalAssigneesCount", box_value(L""));
 
@@ -123,10 +117,8 @@ namespace winrt::ProjectManagementApp::implementation
 
         sqlite3_finalize(stmt);
 
-        // Asignar la colección al ListView
         ActivitiesListView().ItemsSource(activitiesCollection);
 
-        // Mostrar mensaje si no hay actividades
         if (activitiesCollection.Size() == 0)
         {
             EmptyStatePanel().Visibility(Visibility::Visible);
